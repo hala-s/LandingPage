@@ -16,6 +16,7 @@
  */
 const sections = Array.from(document.querySelectorAll('section'));
 const navList = document.getElementById('navbar__list');
+let navLinks = [];
 
 /**
  * Check if a section is in the viewport
@@ -38,21 +39,31 @@ const createNavMenu = () => {
   const fragment = new DocumentFragment();
   sections.forEach(section => {
     const listItem = document.createElement('li');
-    listItem.innerHTML = `<a href="#${section.id}" class="menu__link">${section.dataset.nav}</a>`;
+    const anchor = document.createElement('a');
+    anchor.classList.add('menu__link');
+    anchor.href = `#${section.id}`;
+    anchor.textContent = section.dataset.nav;
+    listItem.appendChild(anchor);
     fragment.appendChild(listItem);
   });
   navList.appendChild(fragment);
+
+  // Get all navigation links
+  navLinks = Array.from(navList.getElementsByClassName('menu__link'));
 };
 
 /**
  * Add class 'active' to section when near top of viewport
+ * and highlight corresponding navigation link
  */
 const highlightActiveSection = () => {
-  sections.forEach(section => {
+  sections.forEach((section, index) => {
     if (sectionIsInView(section)) {
-      section.classList.add('your-active-class');
+      section.classList.add('active');
+      navLinks[index].classList.add('active-link');
     } else {
-      section.classList.remove('your-active-class');
+      section.classList.remove('active');
+      navLinks[index].classList.remove('active-link');
     }
   });
 };
